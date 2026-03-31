@@ -1,22 +1,160 @@
-import { useState } from "react"
+import {
+  AtSignIcon,
+  EyeIcon,
+  EyeOffIcon,
+  LockIcon,
+  MailIcon,
+} from "lucide-react";
+import { useEffect, useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+
 
 const Login = () => {
+  const [state, setState] = useState("login");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [state, setState] = useState('login')
+  const navigate = useNavigate();
+  const { login, signup, user } = useAppContext();
+
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    if (state === "login") {
+      await login({ email, password });
+    } else {
+      await signup({ username, email, password });
+    }
+    setIsSubmitting(false);
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   return (
     <div>
-        <main className="login-page-container">
-            <form className="login-form">
-                <h2 className="text-3xl font-medium text-gray-900 dark:text-white">
-                    {state === 'login' ? 'Sign In' : 'Sign Up'}
-                <p className="mt-2 text-sm text-gray-500/90">
-                    {state === 'login' ? "Please enter your email and password." : "Please enter your details to create an account."}
-                </p>
-                </h2>
-            </form>
-        </main>
-    </div>
-  )
-}
+      <main className="login-page-container">
+        <form onSubmit={handleSubmit} className="login-form">
+          <h2 className="text-3xl font-medium text-gray-900 dark:text-white">
+            {state === "login" ? "Sign In" : "Sign Up"}
+          </h2>
+          <p className="mt-2 text-sm text-gray-500/90">
+            {state === "login"
+              ? "Please enter your email and password."
+              : "Please enter your details to create an account."}
+          </p>
+          {/* Username */}
+          {state !== "login" && (
+            <div>
+              <label className="font-medium text-sm text-gray-700 dark:text-gray-300">
+                Username
+              </label>
+              <div className="relative mt-2">
+                <AtSignIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 size-4.5" />
+                <input
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  type="text"
+                  placeholder="Enter username"
+                  className="login-input"
+                />
+              </div>
+            </div>
+          )}
 
-export default Login
+          {/* Email */}
+          <div>
+            <label className="font-medium text-sm text-gray-700 dark:text-gray-300">
+              Email
+            </label>
+            <div className="relative mt-2">
+              <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 size-4.5" />
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                type="email"
+                placeholder="Enter email"
+                className="login-input"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="font-medium text-sm text-gray-700 dark:text-gray-300">
+              Password
+            </label>
+            <div className="relative mt-2">
+              <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 size-4.5" />
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                placeholder="Enter password"
+                className="login-input pr-10"
+                required
+                type={showPassword ? "text" : "password"}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOffIcon size={16} />
+                ) : (
+                  <EyeIcon size={16} />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="login-button"
+          >
+            {isSubmitting
+              ? "Signing in..."
+              : state === "login"
+                ? "LogIn"
+                : "Sign Up"}
+          </button>
+
+          {state === "login" ? (
+            <p className="text-center py-6 text-sm text-gray-500 dark:text-gray-400">
+              Don't have an account?{" "}
+              <button
+                className="ml-1 cursor-pointer text-green-600 hover:underline"
+                type="button"
+                onClick={() => setState("signup")}
+              >
+                Sign Up
+              </button>
+            </p>
+          ) : (
+            <p className="text-center py-6 text-sm text-gray-500 dark:text-gray-400">
+              Already have an account?{" "}
+              <button
+                className="ml-1 cursor-pointer text-green-600 hover:underline"
+                type="button"
+                onClick={() => setState("login")}
+              >
+                Log In
+              </button>
+            </p>
+          )}
+        </form>
+      </main>
+    </div>
+  );
+};
+
+export default Login;
