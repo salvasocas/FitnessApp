@@ -230,7 +230,7 @@ const Onboarding = () => {
 
               <div className="border-t border-slate-200 dark:border-slate-700 my-6 max-w-lg"></div>
 
-              {/* Daily Tragets */}
+              {/* Daily Targets */}
               <div className="space-y-8 max-w-lg">
                 <h3 className="text-md font-medium text-slate-800 dark:text-white mb-4">
                   Daily Targets
