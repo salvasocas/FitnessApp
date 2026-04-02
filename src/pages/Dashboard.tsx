@@ -1,4 +1,4 @@
-import { Activity, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getMotivationalMessage } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import type { ActivityEntry, FoodEntry } from "../types";
