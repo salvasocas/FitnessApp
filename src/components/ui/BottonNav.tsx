@@ -1,5 +1,4 @@
 import { Activity, Home, User, Utensils } from "lucide-react";
-import React from "react";
 import { NavLink } from "react-router-dom";
 
 const BottonNav = () => {
