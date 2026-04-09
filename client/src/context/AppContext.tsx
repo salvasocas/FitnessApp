@@ -124,6 +124,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     user,
     setUser,
     isUserFetched,
+    setIsUserFetched,
     fetchUser,
     signup,
     login,
