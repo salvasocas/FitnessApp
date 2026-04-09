@@ -13,7 +13,7 @@ import {
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import toast from "react-hot-toast";
-import mockApi from "../assets/mockApi";
+import api from "../configs/api";
 
 const ActivityLog = () => {
   const { allActivityLogs, setAllActivityLogs } = useAppContext();
@@ -69,17 +69,31 @@ const ActivityLog = () => {
       return toast("Please enter a valid data");
     }
     try {
-      const { data } = await mockApi.activityLogs.create({ data: formData });
+      const { data } = await api.post("api/activity-logs", { data: formData });
       setAllActivityLogs((prev) => [...prev, data]);
       setFormData({ name: "", duration: 0, calories: 0 });
       setShowForm(false);
     } catch (error: any) {
       console.error(error);
-      toast.error(error?.message || "Failed to add activity");
+      toast.error(error?.response?.data?.error?.message || error?.message);
     }
   };
 
-  const handleDelete = async (documentId: string) => {};
+  const handleDelete = async (documentId: string) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to delete this entry?",
+      );
+      if (!confirm) return;
+      await api.delete(`api/activity-logs/${documentId}`);
+      setAllActivityLogs((prev) =>
+        prev.filter((a) => a.documentId !== documentId),
+      );
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.error?.message || error?.message);
+    }
+  };
 
   const totalMinutes: number = activities.reduce(
     (sum, a) => sum + a.duration,

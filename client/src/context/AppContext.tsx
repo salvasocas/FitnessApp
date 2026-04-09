@@ -7,7 +7,6 @@ import {
   type Credentials,
 } from "../types";
 import { useNavigate } from "react-router-dom";
-import mockApi from "../assets/mockApi";
 import api from "../configs/api";
 import toast from "react-hot-toast";
 
@@ -92,7 +91,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const { data } = await api.get("/api/activity-logs", {
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       setAllActivityLogs(data);
